@@ -49,8 +49,8 @@ app.post("/login", async (req, res) => {
     const existinguser = await model.findOne({ email });
     if (!existinguser) {
       return res
-        .status(400)
-        .json({ message: "User not register ", status: 400 });
+        .status(404)
+        .json({ message: "User not register ", status: 404 });
     } 
     const checkpassword = bcrypt.compareSync(password, existinguser.password); // true
     if (checkpassword) {
