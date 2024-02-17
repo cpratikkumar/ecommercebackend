@@ -51,7 +51,9 @@ app.post("/login", async (req, res) => {
       return res
         .status(400)
         .json({ message: "User not register ", status: 400 });
-    } else {
+    } 
+    const checkpassword = bcrypt.compareSync(password, existinguser.password); // true
+    if (checkpassword) {
       //authorization
       const token = jwt.sign(
         {
@@ -62,14 +64,16 @@ app.post("/login", async (req, res) => {
         { expiresIn: "1h" }
       );
 
+      return res.status(200).json({
+        message: "Successfully login",
+        status: 200,
+        token,
+        name: existinguser.name,
+      });
+    } else {
       return res
-        .status(200)
-        .json({
-          message: "Successfully login",
-          status: 200,
-          token,
-          name: existinguser.name,
-        });
+        .status(404)
+        .json({ message: "password not matched", status: 404 });
     }
   } catch (error) {
     return res.status(404).json({ message: error, status: 404 });
